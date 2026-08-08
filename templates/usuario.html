@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{titulo}}</title>
+</head>
+
+<body>
+    <h1>{{titulo}}</h1>
+
+    <ul>
+        <li><a href={{url_for('index')}}>Início</a></li>
+        <li><a href={{url_for('cadastroUsuario')}}>Usuário</a></li>
+        <li><a href={{url_for('produtos')}}>Produtos</a></li>
+    </ul>
+
+    <form action="caduser" method="post">
+        <p><label for="name">Username:</label></p>
+        <input type="text" id="name" name="name" required>
+        <p><label for="email">Email:</label></p>
+        <input type="email" id="email" name="email" required>
+        <p><label for="password">password:</label></p>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Quando usuário estiver cadastrado, vamos exibir:</h2>
+    <ul>
+        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
+        <li><a href={{url_for('cadastroProduto')}}>Cadastrar Produto</a></li>
+        <li><a href={{url_for('configCategoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
+        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
+    </ul>
+
+    <h2>Quando efetuarmos uma compra ou venda, vamos exibir:</h2>
+    <ul>
+        <li><a href={{url_for('compra')}}>Compra efetuada!</a></li>
+        <li><a href={{url_for('venda')}}>Venda efetuada!</a></li>
+    </ul>
+</body>
+</html>
