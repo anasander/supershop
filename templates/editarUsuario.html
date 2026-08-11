@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h4>{{titulo}}</h4>
+    <form action="/usuario/editar/{{ usuario.id }}" method="post">
+        <p><label for="user">Username</label></p>
+        <input type="text" id="user" name="user" value="{{usuario.name}}">
+
+        <p><label for="email">E-mail</label></p>  
+        <input type="text" id="email" name="email" value="{{usuario.email}}">     
+
+        <p><label for="password">Password</label></p>
+        <input type="text" id="password" name="password" value="{{usuario.password}}">
+
+        <p><label for="address">Endereco</label></p>
+        <input type="text" id="address" name="address" value="{{usuario.address}}">
+        <br>        
+        <br>        
+        <button type="submit">Editar</button>
+    </form>
+
+    <br>
+    <a href={{url_for("usuario")}}>Cancelar</a>
+</body>
+</html>

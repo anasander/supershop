@@ -10,6 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Usuario(db.Model):
+    __tablename__ = "usuario"
     id = db.Column('usuario_id', db.Integer, primary_key=True)
     name = db.Column('usuario_nome', db.String(100))
     email = db.Column('usuario_email', db.String(100))
@@ -22,6 +23,34 @@ class Usuario(db.Model):
         self.password = password
         self.address = address
 
+class Categoria(db.Model):
+    __tablename__ = "categoria"
+    id = db.Column('categoria_id', db.Integer, primary_key=True)
+    name = db.Column('categoria_nome', db.String(256))
+    description = db.Column('categoria_desc', db.String(256))
+
+    def __init__ (self, name, description):
+        self.name = name
+        self.description = description
+
+class Produto(db.Model):
+    __tablename__ = "produto"
+    id = db.Column('produto_id', db.Integer, primary_key=True)
+    name = db.Column('produto_nome', db.String(256))
+    description = db.Column('produto_desc', db.String(256))
+    quantity = db.Column('produto_qtd', db.Integer)
+    price = db.Column('produto_preco', db.Float)
+    category = db.Column('categoria_id',db.Integer, db.ForeignKey("categoria.categoria_id"))
+    user = db.Column('usuario_id',db.Integer, db.ForeignKey("usuario.usuario_id"))
+
+    def __init__(self, name, description, quantity, price, category_id, user_id):
+        self.name = name
+        self.description = description
+        self.quantity = quantity
+        self.price = price
+        self.category_id = category_id
+        self.user_id = user_id
+
 @app.route("/")
 def index():
     return render_template("index.html", titulo="Página Inicial")
@@ -30,8 +59,8 @@ def index():
 def usuario():
     return render_template("usuario.html", usuarios = Usuario.query.all(), titulo="Usuário")
 
-@app.route("/cadastro/caduser", methods=["POST"])
-def caduser():
+@app.route("/usuario/novo", methods=["POST"])
+def novoUsuario():
     usuario = Usuario(
         request.form.get("name"),
         request.form.get("email"),
@@ -42,23 +71,63 @@ def caduser():
     db.session.commit()
     return redirect(url_for('usuario'))
 
+@app.route("/usuario/criar", methods=['POST'])
+def criarUsuario():
+    usuario = Usuario(request.form.get('user'), request.form.get('email'),request.form.get('password'),request.form.get('address'))
+    db.session.add(usuario)
+    db.session.commit()
+    return redirect(url_for('usuario'))
+
+@app.route("/usuario/detalhes/<int:id>")
+def buscarUsuario(id):
+    usuario = Usuario.query.get(id)
+    return usuario.name
+
+@app.route("/usuario/editar/<int:id>", methods=['GET','POST'])
+def editarUsuario(id):
+    usuario = Usuario.query.get(id)
+    if request.method == 'POST':
+        usuario.name = request.form.get('user')
+        usuario.email = request.form.get('email')
+        usuario.password = request.form.get('password')
+        usuario.address = request.form.get('address')
+        db.session.add(usuario)
+        db.session.commit()
+        return redirect(url_for('usuario'))
+
+    return render_template('editarUsuario.html', usuario=usuario, titulo="Editar Usuário")
+
+@app.route("/usuario/deletar/<int:id>")
+def deletarUsuario(id):
+    usuario = Usuario.query.get(id)
+    db.session.delete(usuario)
+    db.session.commit()
+    return redirect(url_for('usuario'))     
+
 @app.route("/cadastro/produto")
-def cadastroProduto():
-    return render_template("cadastroProduto.html", titulo="Cadastro de Produto")
-
-@app.route("/produtos")
 def produtos():
-    return render_template("produtos.html", titulo="Produtos")
+    return render_template("produtos.html", produtos = Produto.query.all(), categorias = Categoria.query.all(), titulo="Produtos")
 
-@app.route("/produtos/compra")
-def compra():
-    print("Produto comprado com sucesso!")
-    return render_template("compra.html", titulo="Produto Comprado!")
+@app.route("/produto/novo", methods=["POST"])
+def novoProduto():
+    produto = Produto(request.form.get('name'), request.form.get('description'),request.form.get('quantity'),request.form.get('price'),request.form.get('category'),request.form.get('user'))
+    db.session.add(produto)
+    db.session.commit()
+    return redirect(url_for('produtos'))
 
-@app.route("/produtos/venda")
-def venda():
-    print("Produto vendido com sucesso!")
-    return render_template("venda.html", titulo="Produto Vendido!")
+# @app.route("/produtos")
+# def produtos():
+#     return render_template("produtos.html", titulo="Produtos")
+
+# @app.route("/produtos/compra")
+# def compra():
+#     print("Produto comprado com sucesso!")
+#     return render_template("compra.html", titulo="Produto Comprado!")
+
+# @app.route("/produtos/venda")
+# def venda():
+#     print("Produto vendido com sucesso!")
+#     return render_template("venda.html", titulo="Produto Vendido!")
 
 @app.route("/produtos/favoritos")
 def favoritos():
@@ -66,8 +135,15 @@ def favoritos():
     return render_template("favoritos.html", titulo="Produtos Favoritos")
 
 @app.route("/config/categoria")
-def configCategoria():
-    return render_template("configCategoria.html", titulo="Configuração de Categoria")
+def categoria():
+    return render_template('configCategoria.html', categorias = Categoria.query.all(), titulo='Cadastro de Categorias')
+    
+@app.route("/categoria/novo", methods=['POST'])
+def novaCategoria():
+    categoria = Categoria(request.form.get('name'), request.form.get('description'))
+    db.session.add(categoria)
+    db.session.commit()
+    return redirect(url_for('categoria'))
 
 @app.route("/relatorios/vendas")
 def relatorioVendas():

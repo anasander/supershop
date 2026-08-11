@@ -10,8 +10,54 @@
 
     <ul>
         <li><a href={{url_for('index')}}>Início</a></li>
+        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
         <li><a href={{url_for('usuario')}}>Usuário</a></li>
         <li><a href={{url_for('produtos')}}>Produtos</a></li>
+        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
+        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
+    </ul>
+
+    <h4>{{titulo}}</h4>
+    <form action="/produto/novo" method="post">
+        <p><label for="name">Nome</label></p>
+        <input type="text" id="name" name="name">
+
+        <p><label for="description">Desc</label></p>
+        <textarea rows="4" cols="50" id="description" name="description"></textarea>      
+
+        <p><label for="quantity">Quantidade</label></p>
+        <input type="text" id="quantity" name="quantity">
+
+        <p><label for="price">Preco</label></p>
+        <input type="text" id="price" name="price">
+        
+        <p><label for="category">Categoria</label></p>
+        <select id="category" name="category">
+            {% for categoria in categorias %} 
+                <option value="{{ categoria.id }}">{{ categoria.name }}</option>
+            {% endfor %}
+        </select>
+
+        <p><label for="user">Usuario</label></p>
+        <input type="text" id="user" name="user">
+        <br>
+        <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Lista de produtos</h2>
+    <ul>
+        {% for produto in produtos %}
+            <li>Nome: {{produto.name}} - Descrição: {{produto.description}} - Quantidade: {{produto.quantity}} - Preço: {{produto.price}} - Categoria: {{produto.category}}</li>
+        {% endfor %}
+    </ul>
+    
+        <h2>Lista de categorias</h2>
+    <ul>
+        {% for categoria in categorias %}
+            <li>Nome: {{categoria.name}} - Descrição: {{categoria.description}}</li>
+        {% endfor %}
     </ul>
 </body>
 </html>

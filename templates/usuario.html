@@ -9,13 +9,17 @@
 <body>
     <h1>{{titulo}}</h1>
 
-    <ul>
+<ul>
         <li><a href={{url_for('index')}}>Início</a></li>
+        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
         <li><a href={{url_for('usuario')}}>Usuário</a></li>
         <li><a href={{url_for('produtos')}}>Produtos</a></li>
+        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
+        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
     </ul>
 
-    <form action="caduser" method="post">
+    <form action="/usuario/novo" method="post">
         <p><label for="name">Username:</label></p>
         <input type="text" id="name" name="name" required>
         <p><label for="email">Email:</label></p>
@@ -32,23 +36,8 @@
     <h2>Lista de usuários</h2>
     <ul>
         {% for usuario in usuarios %}
-            <li>Nome: {{usuario.name}} - Email: {{usuario.email}} - Senha: {{usuario.password}} - Endereço: {{usuario.address}}</li>
+            <li>Nome: {{usuario.name}} - Email: {{usuario.email}} - Senha: {{usuario.password}} - Endereço: {{usuario.address}} - <a href={{url_for('buscarUsuario', id=usuario.id)}}>VER DETALHES</a> - <a href={{url_for('editarUsuario', id=usuario.id)}}>EDITAR</a> - <a href={{url_for('deletarUsuario', id=usuario.id)}}>DELETAR</a></li>
         {% endfor %}
-    </ul>
-
-    <h2>Quando usuário estiver cadastrado, vamos exibir:</h2>
-    <ul>
-        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
-        <li><a href={{url_for('cadastroProduto')}}>Cadastrar Produto</a></li>
-        <li><a href={{url_for('configCategoria')}}>Configurar Categoria</a></li>
-        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
-        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
-    </ul>
-
-    <h2>Quando efetuarmos uma compra ou venda, vamos exibir:</h2>
-    <ul>
-        <li><a href={{url_for('compra')}}>Compra efetuada!</a></li>
-        <li><a href={{url_for('venda')}}>Venda efetuada!</a></li>
     </ul>
 </body>
 </html>

@@ -8,15 +8,32 @@
 <body>
     <h1>{{titulo}}</h1>
 
-    <ul>
+<ul>
         <li><a href={{url_for('index')}}>Início</a></li>
         <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
         <li><a href={{url_for('usuario')}}>Usuário</a></li>
         <li><a href={{url_for('produtos')}}>Produtos</a></li>
-        <li><a href={{url_for('cadastroProduto')}}>Cadastrar Produto</a></li>
-        <li><a href={{url_for('configCategoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
         <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
         <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
+    </ul>
+
+    <h4>{{titulo}}</h4>
+    <form action="/categoria/novo" method="post">
+        <p><label for="name">Nome</label>
+        <input type="text" id="name" name="name"></p>
+
+        <p><label for="description">Descrição</label></p>
+        <input type="text" id="description" name="description">
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Lista de categorias</h2>
+    <ul>
+        {% for categoria in categorias %}
+            <li>Nome: {{categoria.name}} - Descrição: {{categoria.description}}</li>
+        {% endfor %}
     </ul>
 </body>
 </html>
