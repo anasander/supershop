@@ -11,7 +11,7 @@
 
     <ul>
         <li><a href={{url_for('index')}}>Início</a></li>
-        <li><a href={{url_for('cadastroUsuario')}}>Usuário</a></li>
+        <li><a href={{url_for('usuario')}}>Usuário</a></li>
         <li><a href={{url_for('produtos')}}>Produtos</a></li>
     </ul>
 
@@ -22,10 +22,19 @@
         <input type="email" id="email" name="email" required>
         <p><label for="password">password:</label></p>
         <input type="password" id="password" name="password" required>
+        <p><label for="address">Endereço:</label></p>
+        <input type="text" id="address" name="address" required>
         <br>
         <br>
         <button type="submit">Cadastrar</button>
     </form>
+
+    <h2>Lista de usuários</h2>
+    <ul>
+        {% for usuario in usuarios %}
+            <li>Nome: {{usuario.name}} - Email: {{usuario.email}} - Senha: {{usuario.password}} - Endereço: {{usuario.address}}</li>
+        {% endfor %}
+    </ul>
 
     <h2>Quando usuário estiver cadastrado, vamos exibir:</h2>
     <ul>
