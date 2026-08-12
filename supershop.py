@@ -51,6 +51,10 @@ class Produto(db.Model):
         self.category_id = category_id
         self.user_id = user_id
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html', titulo="Página não encontrada"), 404
+
 @app.route("/")
 def index():
     return render_template("index.html", titulo="Página Inicial")

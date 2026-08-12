@@ -6,9 +6,8 @@
     <title>{{titulo}}</title>
 </head>
 <body>
-    <h1>{{titulo}}</h1>
-
-<ul>
+    <h2>Navegação</h2>
+    <ul>
         <li><a href={{url_for('index')}}>Início</a></li>
         <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
         <li><a href={{url_for('usuario')}}>Usuário</a></li>
@@ -18,14 +17,17 @@
         <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
     </ul>
 
+    <h1>{{titulo}}</h1>
+
     <h4>{{titulo}}</h4>
     <form action="/categoria/novo" method="post">
-        <p><label for="name">Nome</label>
-        <input type="text" id="name" name="name"></p>
+        <p><label for="name">Nome</label></p>
+        <input type="text" id="name" name="name">
 
         <p><label for="description">Descrição</label></p>
         <input type="text" id="description" name="description">
-
+        <br>
+        <br>
         <button type="submit">Cadastrar</button>
     </form>
 

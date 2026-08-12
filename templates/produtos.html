@@ -6,8 +6,7 @@
     <title>{{titulo}}</title>
 </head>
 <body>
-    <h1>{{titulo}}</h1>
-
+    <h2>Navegação</h2>
     <ul>
         <li><a href={{url_for('index')}}>Início</a></li>
         <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
@@ -17,6 +16,8 @@
         <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
         <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
     </ul>
+
+    <h1>{{titulo}}</h1>
 
     <h4>{{titulo}}</h4>
     <form action="/produto/novo" method="post">

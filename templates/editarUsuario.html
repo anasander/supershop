@@ -6,6 +6,17 @@
     <title>Document</title>
 </head>
 <body>
+    <h2>Navegação</h2>
+    <ul>
+        <li><a href={{url_for('index')}}>Início</a></li>
+        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
+        <li><a href={{url_for('usuario')}}>Usuário</a></li>
+        <li><a href={{url_for('produtos')}}>Produtos</a></li>
+        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
+        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
+    </ul>
+    
     <h4>{{titulo}}</h4>
     <form action="/usuario/editar/{{ usuario.id }}" method="post">
         <p><label for="user">Username</label></p>
