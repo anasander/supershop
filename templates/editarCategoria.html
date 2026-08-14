@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Navegação</h2>
+    <ul>
+        <li><a href={{url_for('index')}}>Início</a></li>
+        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
+        <li><a href={{url_for('usuario')}}>Usuário</a></li>
+        <li><a href={{url_for('produtos')}}>Produtos</a></li>
+        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
+        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
+        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
+    </ul>
+    
+    <h4>{{titulo}}</h4>
+    <form action="/categoria/editar/{{ categoria.id }}" method="post">
+        <p><label for="name">Nome</label></p>
+        <input type="text" id="name" name="name" value="{{categoria.name}}">
+
+        <p><label for="description">Descrição</label></p>
+        <input type="text" id="description" name="description" value="{{categoria.description}}">
+        <br>        
+        <br>        
+        <button type="submit">Editar</button>
+    </form>
+
+    <br>
+    <a href={{url_for("categoria")}}>Cancelar</a>
+</body>
+</html>

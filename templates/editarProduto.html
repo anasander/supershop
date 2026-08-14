@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{titulo}}</title>
+    <title>Document</title>
 </head>
 <body>
     <h2>Navegação</h2>
@@ -16,42 +16,35 @@
         <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
         <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
     </ul>
-
-    <h1>{{titulo}}</h1>
-
+    
     <h4>{{titulo}}</h4>
-    <form action="/produto/novo" method="post">
+    <form action="/produto/editar/{{ produto.id }}" method="post">
         <p><label for="name">Nome</label></p>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" value="{{ produto.name }}">
 
         <p><label for="description">Desc</label></p>
-        <textarea rows="4" cols="50" id="description" name="description"></textarea>      
+        <textarea rows="4" cols="50" id="description" name="description">{{ produto.description }}</textarea>
 
         <p><label for="quantity">Quantidade</label></p>
-        <input type="text" id="quantity" name="quantity">
+        <input type="text" id="quantity" name="quantity" value="{{ produto.quantity }}">
 
         <p><label for="price">Preco</label></p>
-        <input type="text" id="price" name="price">
+        <input type="text" id="price" name="price" value="{{ produto.price }}">
         
         <p><label for="category">Categoria</label></p>
         <select id="category" name="category">
             {% for categoria in categorias %} 
-                <option value="{{ categoria.id }}">{{ categoria.name }}</option>
+                <option value="{{ categoria.id }}" {% if categoria.id == produto.category %}selected{% endif %}>
+                    {{ categoria.name }}
+                </option>
             {% endfor %}
         </select>
-
-        <p><label for="user">Usuario</label></p>
-        <input type="text" id="user" name="user">
-        <br>
-        <br>
-        <button type="submit">Cadastrar</button>
+        <br>        
+        <br>        
+        <button type="submit">Editar</button>
     </form>
 
-    <h2>Lista de produtos</h2>
-    <ul>
-        {% for produto in produtos %}
-            <li>Nome: {{produto.name}} - Descrição: {{produto.description}} - Quantidade: {{produto.quantity}} - Preço: {{produto.price}} - Categoria: {{produto.category}} - <a href={{url_for('editarProduto', id=produto.id)}}>EDITAR</a> - <a href={{url_for('deletarProduto', id=produto.id)}}>DELETAR</a></li>
-        {% endfor %}
-    </ul>
+    <br>
+    <a href={{url_for("produtos")}}>Cancelar</a>
 </body>
 </html>

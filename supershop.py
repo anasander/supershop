@@ -4,11 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1:3306/supershop'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://supershop:1234567890@localhost:3306/supershop'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# CLASSES
 class Usuario(db.Model):
     __tablename__ = "usuario"
     id = db.Column('usuario_id', db.Integer, primary_key=True)
@@ -48,17 +48,22 @@ class Produto(db.Model):
         self.description = description
         self.quantity = quantity
         self.price = price
-        self.category_id = category_id
-        self.user_id = user_id
+        self.category = category_id
+        self.user = user_id
 
+# TRATAMENTO DE ERROS
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html', titulo="Página não encontrada"), 404
 
+# --- ROTAS ---
+
+# INDEX
 @app.route("/")
 def index():
     return render_template("index.html", titulo="Página Inicial")
 
+# USUÁRIO
 @app.route("/cadastro/usuario")
 def usuario():
     return render_template("usuario.html", usuarios = Usuario.query.all(), titulo="Usuário")
@@ -106,8 +111,9 @@ def deletarUsuario(id):
     usuario = Usuario.query.get(id)
     db.session.delete(usuario)
     db.session.commit()
-    return redirect(url_for('usuario'))     
-
+    return redirect(url_for('usuario'))
+ 
+# PRODUTOS
 @app.route("/cadastro/produto")
 def produtos():
     return render_template("produtos.html", produtos = Produto.query.all(), categorias = Categoria.query.all(), titulo="Produtos")
@@ -119,9 +125,30 @@ def novoProduto():
     db.session.commit()
     return redirect(url_for('produtos'))
 
-# @app.route("/produtos")
-# def produtos():
-#     return render_template("produtos.html", titulo="Produtos")
+@app.route("/produto/editar/<int:id>", methods=['GET','POST'])
+def editarProduto(id):
+    produto = Produto.query.get(id)
+    if request.method == 'POST':
+        produto.name = request.form.get('name')
+        produto.description = request.form.get('description')
+        produto.quantity = request.form.get('quantity')
+        produto.price = request.form.get('price')
+        produto.category = request.form.get('category')
+        produto.user = request.form.get('user')
+        db.session.add(produto)
+        db.session.commit()
+        return redirect(url_for('produtos'))
+
+    categorias = Categoria.query.all()
+
+    return render_template('editarProduto.html', produto=produto, categorias=categorias, titulo="Editar Produto")
+
+@app.route("/produto/deletar/<int:id>")
+def deletarProduto(id):
+    produto = Produto.query.get(id)
+    db.session.delete(produto)
+    db.session.commit()
+    return redirect(url_for('produtos'))
 
 # @app.route("/produtos/compra")
 # def compra():
@@ -138,9 +165,10 @@ def favoritos():
     print("Produto adicionado aos favoritos!")
     return render_template("favoritos.html", titulo="Produtos Favoritos")
 
-@app.route("/config/categoria")
+# CATEGORIAS
+@app.route("/cadastro/categoria")
 def categoria():
-    return render_template('configCategoria.html', categorias = Categoria.query.all(), titulo='Cadastro de Categorias')
+    return render_template('cadastroCategoria.html', categorias = Categoria.query.all(), titulo='Cadastro de Categorias')
     
 @app.route("/categoria/novo", methods=['POST'])
 def novaCategoria():
@@ -149,6 +177,26 @@ def novaCategoria():
     db.session.commit()
     return redirect(url_for('categoria'))
 
+@app.route("/categoria/editar/<int:id>", methods=['GET','POST'])
+def editarCategoria(id):
+    categoria = Categoria.query.get(id)
+    if request.method == 'POST':
+        categoria.name = request.form.get('name')
+        categoria.description = request.form.get('description')
+        db.session.add(categoria)
+        db.session.commit()
+        return redirect(url_for('categoria'))
+
+    return render_template('editarCategoria.html', categoria=categoria, titulo="Editar Categoria")
+
+@app.route("/categoria/deletar/<int:id>")
+def deletarCategoria(id):
+    categoria = Categoria.query.get(id)
+    db.session.delete(categoria)
+    db.session.commit()
+    return redirect(url_for('categoria'))
+
+# RELATÓRIOS
 @app.route("/relatorios/vendas")
 def relatorioVendas():
     return render_template("relatorioVendas.html", titulo="Relatório de Vendas")
@@ -157,6 +205,7 @@ def relatorioVendas():
 def relatorioCompras():
     return render_template("relatorioCompras.html", titulo="Relatório de Compras")
 
+# RENDERIZAÇÃO
 if __name__ == "supershop":
     with app.app_context():
         db.create_all()

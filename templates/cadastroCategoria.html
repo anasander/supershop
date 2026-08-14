@@ -19,7 +19,6 @@
 
     <h1>{{titulo}}</h1>
 
-    <h4>{{titulo}}</h4>
     <form action="/categoria/novo" method="post">
         <p><label for="name">Nome</label></p>
         <input type="text" id="name" name="name">
@@ -34,7 +33,7 @@
     <h2>Lista de categorias</h2>
     <ul>
         {% for categoria in categorias %}
-            <li>Nome: {{categoria.name}} - Descrição: {{categoria.description}}</li>
+            <li>Nome: {{categoria.name}} - Descrição: {{categoria.description}} - <a href={{url_for('editarCategoria', id=categoria.id)}}>EDITAR</a> - <a href={{url_for('deletarCategoria', id=categoria.id)}}>DELETAR</a></li>
         {% endfor %}
     </ul>
 </body>
