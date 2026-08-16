@@ -19,16 +19,16 @@
     
     <h4>{{titulo}}</h4>
     <form action="/usuario/editar/{{ usuario.id }}" method="post">
-        <p><label for="user">Username</label></p>
+        <p><label for="user">Nome</label></p>
         <input type="text" id="user" name="user" value="{{usuario.name}}">
 
         <p><label for="email">E-mail</label></p>  
         <input type="text" id="email" name="email" value="{{usuario.email}}">     
 
-        <p><label for="password">Password</label></p>
+        <p><label for="password">Senha</label></p>
         <input type="text" id="password" name="password" value="{{usuario.password}}">
 
-        <p><label for="address">Endereco</label></p>
+        <p><label for="address">Endereço</label></p>
         <input type="text" id="address" name="address" value="{{usuario.address}}">
         <br>        
         <br>        
