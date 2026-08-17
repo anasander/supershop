@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, url_for, redirect, make_response
 from markupsafe import escape
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import current_user, LoginManager, login_user, logout_user, login_required
+import hashlib
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1:3306/supershop'
@@ -8,13 +10,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+app.secret_key = 'supersecretkey'
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 # CLASSES
 class Usuario(db.Model):
     __tablename__ = "usuario"
     id = db.Column('usuario_id', db.Integer, primary_key=True)
     name = db.Column('usuario_nome', db.String(100))
     email = db.Column('usuario_email', db.String(100))
-    password = db.Column('usuario_senha', db.String(100))
+    password = db.Column('usuario_senha', db.String(255))
     address = db.Column('usuario_endereco', db.String(200))
 
     def __init__(self, name, email, password, address):
@@ -22,6 +29,18 @@ class Usuario(db.Model):
         self.email = email
         self.password = password
         self.address = address
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
 
 class Categoria(db.Model):
     __tablename__ = "categoria"
@@ -56,6 +75,11 @@ class Produto(db.Model):
 def page_not_found(e):
     return render_template('404.html', titulo="Página não encontrada"), 404
 
+# LOGIN MANAGER
+@login_manager.user_loader
+def load_user(id):
+    return Usuario.query.get(id)
+
 # --- ROTAS ---
 
 # INDEX
@@ -63,17 +87,40 @@ def page_not_found(e):
 def index():
     return render_template("index.html", titulo="Página Inicial")
 
+# LOGIN
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = hashlib.sha512(str(request.form.get("password")).encode('utf-8')).hexdigest()
+
+        usuario = Usuario.query.filter_by(email=email, password=password).first()
+        if usuario and usuario.password == password:
+            login_user(usuario)
+            return redirect(url_for("usuario"))
+        else:
+            return render_template("login.html", titulo="Login", error="Credenciais inválidas")
+    return render_template("login.html", titulo="Login")
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
 # USUÁRIO
 @app.route("/cadastro/usuario")
+@login_required
 def usuario():
     return render_template("usuario.html", usuarios = Usuario.query.all(), titulo="Usuário")
 
 @app.route("/usuario/novo", methods=["POST"])
 def novoUsuario():
+    hash = hashlib.sha512(str(request.form.get("password")).encode('utf-8')).hexdigest()
+    
     usuario = Usuario(
         request.form.get("name"),
         request.form.get("email"),
-        request.form.get("password"),
+        hash, 
         request.form.get("address")
     )
     db.session.add(usuario)
@@ -82,7 +129,9 @@ def novoUsuario():
 
 @app.route("/usuario/criar", methods=['POST'])
 def criarUsuario():
-    usuario = Usuario(request.form.get('user'), request.form.get('email'),request.form.get('password'),request.form.get('address'))
+    hash = hashlib.sha512(str(request.form.get("password")).encode('utf-8')).hexdigest()
+
+    usuario = Usuario(request.form.get('user'), request.form.get('email'), hash, request.form.get('address'))
     db.session.add(usuario)
     db.session.commit()
     return redirect(url_for('usuario'))
@@ -98,7 +147,7 @@ def editarUsuario(id):
     if request.method == 'POST':
         usuario.name = request.form.get('user')
         usuario.email = request.form.get('email')
-        usuario.password = request.form.get('password')
+        usuario.password = hashlib.sha512(str(request.form.get("password")).encode('utf-8')).hexdigest()
         usuario.address = request.form.get('address')
         db.session.add(usuario)
         db.session.commit()
@@ -115,6 +164,7 @@ def deletarUsuario(id):
  
 # PRODUTOS
 @app.route("/cadastro/produto")
+@login_required
 def produtos():
     return render_template("produtos.html", produtos = Produto.query.all(), categorias = Categoria.query.all(), titulo="Produtos")
 
@@ -167,6 +217,7 @@ def favoritos():
 
 # CATEGORIAS
 @app.route("/cadastro/categoria")
+@login_required
 def categoria():
     return render_template('cadastroCategoria.html', categorias = Categoria.query.all(), titulo='Cadastro de Categorias')
     

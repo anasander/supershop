@@ -9,7 +9,6 @@
     <h2>Navegação</h2>
     <ul>
         <li><a href={{url_for('index')}}>Início</a></li>
-        <li><a href={{url_for('logout')}}>Sair</a></li>
         <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
         <li><a href={{url_for('usuario')}}>Usuário</a></li>
         <li><a href={{url_for('produtos')}}>Produtos</a></li>
@@ -19,5 +18,18 @@
     </ul>
 
     <h1>{{titulo}}</h1>
+
+    <h2>{{error}}</h2>
+
+    <form action="/login" method="post">
+        <p><label for="email">Email</label></p>
+        <input type="email" id="email" name="email">
+
+        <p><label for="password">Senha</label></p>
+        <input type="password" id="password" name="password">
+        <br>
+        <br>
+        <button type="submit">Entrar</button>
+    </form>
 </body>
 </html>
