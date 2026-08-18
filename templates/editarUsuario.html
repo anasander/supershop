@@ -1,41 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Navegação</h2>
-    <ul>
-        <li><a href={{url_for('index')}}>Início</a></li>
-        <li><a href={{url_for('favoritos')}}>Favoritos</a></li>
-        <li><a href={{url_for('usuario')}}>Usuário</a></li>
-        <li><a href={{url_for('produtos')}}>Produtos</a></li>
-        <li><a href={{url_for('categoria')}}>Configurar Categoria</a></li>
-        <li><a href={{url_for('relatorioVendas')}}>Relatório de Vendas</a></li>
-        <li><a href={{url_for('relatorioCompras')}}>Relatório de Compras</a></li>
-    </ul>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <title>{{ titulo }}</title>
     
-    <h4>{{titulo}}</h4>
-    <form action="/usuario/editar/{{ usuario.id }}" method="post">
-        <p><label for="user">Nome</label></p>
-        <input type="text" id="user" name="user" value="{{usuario.name}}">
+    <style>
+        .bg-blue-gradient {
+            background: linear-gradient(135deg, #003366 0%, #0056b3 100%);
+            color: #ffffff;
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #004080 0%, #0069d9 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover, .btn-gradient:focus {
+            background: linear-gradient(135deg, #00264d 0%, #004b99 100%);
+            color: white;
+            box-shadow: 0 0 0 0.25rem rgba(0, 86, 179, 0.5);
+        }
+    </style>
+</head>
 
-        <p><label for="email">E-mail</label></p>  
-        <input type="text" id="email" name="email" value="{{usuario.email}}">     
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-blue-gradient shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">SuperShop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('favoritos') }}">Favoritos</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('usuario') }}">Usuário</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('produtos') }}">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('categoria') }}">Categorias</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Relatórios
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('relatorioVendas') }}">Vendas</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('relatorioCompras') }}">Compras</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('logout') }}">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-        <p><label for="password">Senha</label></p>
-        <input type="text" id="password" name="password" value="{{usuario.password}}">
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-blue-gradient text-white py-3">
+                        <h5 class="card-title mb-0">{{ titulo }}</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="/usuario/editar/{{ usuario.id }}" method="post">
+                            <div class="mb-3">
+                                <label for="user" class="form-label fw-semibold">Nome:</label>
+                                <input type="text" class="form-control" id="user" name="user" value="{{ usuario.name }}" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-semibold">E-mail:</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+                            </div>
 
-        <p><label for="address">Endereço</label></p>
-        <input type="text" id="address" name="address" value="{{usuario.address}}">
-        <br>        
-        <br>        
-        <button type="submit">Editar</button>
-    </form>
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-semibold">Senha:</label>
+                                <input type="text" class="form-control" id="password" name="password" value="{{ usuario.password }}" required>
+                            </div>
 
-    <br>
-    <a href={{url_for("usuario")}}>Cancelar</a>
+                            <div class="mb-4">
+                                <label for="address" class="form-label fw-semibold">Endereço:</label>
+                                <input type="text" class="form-control" id="address" name="address" value="{{ usuario.address }}" required>
+                            </div>
+                            
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit" class="btn btn-gradient flex-grow-1 py-2 fw-bold">Salvar Alterações</button>
+                                <a href="{{ url_for('usuario') }}" class="btn btn-outline-secondary py-2 px-4 fw-bold">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -111,7 +111,7 @@ def logout():
 @app.route("/cadastro/usuario")
 @login_required
 def usuario():
-    return render_template("usuario.html", usuarios = Usuario.query.all(), titulo="Usuário")
+    return render_template("usuario.html", usuarios=Usuario.query.all(), titulo="Usuário")
 
 @app.route("/usuario/novo", methods=["POST"])
 def novoUsuario():
@@ -123,15 +123,6 @@ def novoUsuario():
         hash, 
         request.form.get("address")
     )
-    db.session.add(usuario)
-    db.session.commit()
-    return redirect(url_for('usuario'))
-
-@app.route("/usuario/criar", methods=['POST'])
-def criarUsuario():
-    hash = hashlib.sha512(str(request.form.get("password")).encode('utf-8')).hexdigest()
-
-    usuario = Usuario(request.form.get('user'), request.form.get('email'), hash, request.form.get('address'))
     db.session.add(usuario)
     db.session.commit()
     return redirect(url_for('usuario'))
@@ -211,6 +202,7 @@ def deletarProduto(id):
 #     return render_template("venda.html", titulo="Produto Vendido!")
 
 @app.route("/produtos/favoritos")
+@login_required
 def favoritos():
     print("Produto adicionado aos favoritos!")
     return render_template("favoritos.html", titulo="Produtos Favoritos")
@@ -249,10 +241,12 @@ def deletarCategoria(id):
 
 # RELATÓRIOS
 @app.route("/relatorios/vendas")
+@login_required
 def relatorioVendas():
     return render_template("relatorioVendas.html", titulo="Relatório de Vendas")
 
 @app.route("/relatorios/compras")
+@login_required
 def relatorioCompras():
     return render_template("relatorioCompras.html", titulo="Relatório de Compras")
 
