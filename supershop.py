@@ -109,7 +109,7 @@ def logout():
 
 # USUÁRIO
 @app.route("/cadastro/usuario")
-@login_required
+# @login_required
 def usuario():
     return render_template("usuario.html", usuarios=Usuario.query.all(), titulo="Usuário")
 
