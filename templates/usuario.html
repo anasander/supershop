@@ -36,11 +36,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('favoritos') }}">Favoritos</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link" href="{{ url_for('favoritos') }}">Favoritos</a></li> -->
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('usuario') }}">Usuário</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('produtos') }}">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('categoria') }}">Categorias</a></li>
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Relatórios
                         </a>
@@ -48,8 +48,7 @@
                             <li><a class="dropdown-item" href="{{ url_for('relatorioVendas') }}">Vendas</a></li>
                             <li><a class="dropdown-item" href="{{ url_for('relatorioCompras') }}">Compras</a></li>
                         </ul>
-                    </li>
-                    <!-- Altera o botão Sair/Entrar com base no status do login -->
+                    </li> -->
                     {% if current_user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link text-warning" href="{{ url_for('logout') }}">Sair</a></li>
                     {% else %}
