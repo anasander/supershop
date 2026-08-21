@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, make_response
+from flask import Flask, render_template, request, url_for, redirect, make_response, flash
 from markupsafe import escape
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, LoginManager, login_user, logout_user, login_required
@@ -125,6 +125,7 @@ def novoUsuario():
     )
     db.session.add(usuario)
     db.session.commit()
+    flash('Usuário criado com sucesso!', 'success')
     return redirect(url_for('usuario'))
 
 @app.route("/usuario/detalhes/<int:id>")
@@ -142,6 +143,7 @@ def editarUsuario(id):
         usuario.address = request.form.get('address')
         db.session.add(usuario)
         db.session.commit()
+        flash('Usuário atualizado com sucesso!', 'success')
         return redirect(url_for('usuario'))
 
     return render_template('editarUsuario.html', usuario=usuario, titulo="Editar Usuário")
@@ -151,6 +153,7 @@ def deletarUsuario(id):
     usuario = Usuario.query.get(id)
     db.session.delete(usuario)
     db.session.commit()
+    flash('Usuário excluído com sucesso!', 'danger')
     return redirect(url_for('usuario'))
  
 # PRODUTOS
@@ -164,6 +167,7 @@ def novoProduto():
     produto = Produto(request.form.get('name'), request.form.get('description'),request.form.get('quantity'),request.form.get('price'),request.form.get('category'),request.form.get('user'))
     db.session.add(produto)
     db.session.commit()
+    flash('Produto criado com sucesso!', 'success')
     return redirect(url_for('produtos'))
 
 @app.route("/produto/editar/<int:id>", methods=['GET','POST'])
@@ -178,6 +182,7 @@ def editarProduto(id):
         produto.user = request.form.get('user')
         db.session.add(produto)
         db.session.commit()
+        flash('Produto atualizado com sucesso!', 'success')
         return redirect(url_for('produtos'))
 
     categorias = Categoria.query.all()
@@ -189,6 +194,7 @@ def deletarProduto(id):
     produto = Produto.query.get(id)
     db.session.delete(produto)
     db.session.commit()
+    flash('Produto excluído com sucesso!', 'danger')
     return redirect(url_for('produtos'))
 
 # @app.route("/produtos/compra")
@@ -218,6 +224,7 @@ def novaCategoria():
     categoria = Categoria(request.form.get('name'), request.form.get('description'))
     db.session.add(categoria)
     db.session.commit()
+    flash('Categoria criada com sucesso!', 'success')
     return redirect(url_for('categoria'))
 
 @app.route("/categoria/editar/<int:id>", methods=['GET','POST'])
@@ -228,6 +235,7 @@ def editarCategoria(id):
         categoria.description = request.form.get('description')
         db.session.add(categoria)
         db.session.commit()
+        flash('Categoria atualizada com sucesso!', 'success')
         return redirect(url_for('categoria'))
 
     return render_template('editarCategoria.html', categoria=categoria, titulo="Editar Categoria")
@@ -237,6 +245,7 @@ def deletarCategoria(id):
     categoria = Categoria.query.get(id)
     db.session.delete(categoria)
     db.session.commit()
+    flash('Categoria excluída com sucesso!', 'danger')
     return redirect(url_for('categoria'))
 
 # RELATÓRIOS

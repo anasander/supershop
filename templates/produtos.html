@@ -65,6 +65,19 @@
             <p class="text-muted">Gerencie os produtos do sistema.</p>
         </header>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <div class="row">
             <div class="col-lg-3 mb-4">
                 <div class="card shadow-sm border-0">
@@ -143,9 +156,35 @@
                                             <td>{{ produto.price }}</td>
                                             <td>{{ produto.category }}</td>
                                             <td class="text-center">
-                                                <div class="btn-group" role="group">
+                                                <div class="d-flex gap-2 justify-content-center" role="group">
                                                     <a href="{{ url_for('editarProduto', id=produto.id) }}" class="btn btn-sm btn-primary">Editar</a>
-                                                    <a href="{{ url_for('deletarProduto', id=produto.id) }}" class="btn btn-sm btn-danger">Deletar</a>
+
+                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ produto.id }}">Excluir</button>
+
+                                                    <div class="modal fade" id="modalExcluir{{ produto.id }}" tabindex="-1" aria-labelledby="modalLabel{{ produto.id }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                            
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modalLabel{{ produto.id }}">Confirmar Exclusão</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            
+                                                            <div class="modal-body">
+                                                                Tem certeza que deseja excluir o produto <strong>{{ produto.name }}</strong>? 
+                                                                <br>Esta ação não poderá ser desfeita.
+                                                            </div>
+                                                            
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                <a href="{{ url_for('deletarProduto', id=produto.id) }}" class="btn btn-danger">Sim, Excluir</a>
+                                                            </div>
+                                                            
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- <a href="{{ url_for('deletarProduto', id=produto.id) }}" class="btn btn-sm btn-danger">Deletar</a> -->
                                                 </div>
                                             </td>
                                         </tr>
