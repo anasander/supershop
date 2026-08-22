@@ -7,7 +7,7 @@ import hashlib
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@127.0.0.1:3306/supershop'
 
-# SUBSTITUINDO A CHAMADA DO BANCO DE DADOS MYSQL PARA SQLITE, POIS O MYSQL NÃO ESTÁ FUNCIONANDO NO MOMENTO
+# SUBSTITUINDO A CHAMADA DO BANCO DE DADOS MYSQL PARA SQLITE
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///supershop.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
